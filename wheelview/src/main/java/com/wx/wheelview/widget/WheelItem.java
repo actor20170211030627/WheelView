@@ -41,28 +41,27 @@ public class WheelItem extends FrameLayout {
 
     public WheelItem(Context context) {
         super(context);
-        init();
+        init(context, null);
     }
 
     public WheelItem(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context, attrs);
     }
 
     public WheelItem(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context, attrs);
     }
 
     /**
      * 初始化
      */
-    private void init() {
-        LinearLayout layout = new LinearLayout(getContext());
+    private void init(Context context, AttributeSet attrs) {
+        LinearLayout layout = new LinearLayout(context);
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT,
-                WheelUtils.dip2px(getContext(),
-                WheelConstants
-                        .WHEEL_ITEM_HEIGHT));
+                WheelUtils.dip2px(context, WheelConstants.WHEEL_ITEM_HEIGHT)
+        );
         layout.setOrientation(LinearLayout.HORIZONTAL);
         layout.setPadding(WheelConstants.WHEEL_ITEM_PADDING, WheelConstants.WHEEL_ITEM_PADDING,
                 WheelConstants
@@ -71,7 +70,7 @@ public class WheelItem extends FrameLayout {
         addView(layout, layoutParams);
 
         // 图片
-        mImage = new ImageView(getContext());
+        mImage = new ImageView(context);
         mImage.setTag(WheelConstants.WHEEL_ITEM_IMAGE_TAG);
         mImage.setVisibility(View.GONE);
         LayoutParams imageParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -80,7 +79,7 @@ public class WheelItem extends FrameLayout {
         layout.addView(mImage, imageParams);
 
         // 文本
-        mText = new TextView(getContext());
+        mText = new TextView(context);
         mText.setTag(WheelConstants.WHEEL_ITEM_TEXT_TAG);
         mText.setEllipsize(TextUtils.TruncateAt.END);
         mText.setSingleLine();

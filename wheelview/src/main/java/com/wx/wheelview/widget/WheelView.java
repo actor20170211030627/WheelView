@@ -28,6 +28,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -59,7 +60,7 @@ public class WheelView<T> extends ListView implements IWheelView<T> {
     private int mWheelSize = WHEEL_SIZE;    // 滚轮个数
     private boolean mLoop = LOOP;   // 是否循环滚动
     private List<T> mList = null;   // 滚轮数据列表
-    private int mCurrentPositon = -1;    // 记录滚轮当前刻度
+    private int mCurrentPosition = -1;    // 记录滚轮当前刻度
     private String mExtraText;  // 添加滚轮选中位置附加文本
     private int mExtraTextColor;    // 附加文本颜色
     private int mExtraTextSize; // 附加文本大小
@@ -115,9 +116,12 @@ public class WheelView<T> extends ListView implements IWheelView<T> {
         }
     };
 
-    private OnTouchListener mTouchListener = (v, event) -> {
-        v.getParent().requestDisallowInterceptTouchEvent(true);
-        return false;
+    private OnTouchListener mTouchListener = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
+        }
     };
 
     private OnScrollListener mOnScrollListener = new OnScrollListener() {
@@ -461,7 +465,7 @@ public class WheelView<T> extends ListView implements IWheelView<T> {
      * @return
      */
     public int getCurrentPosition() {
-        return mCurrentPositon;
+        return mCurrentPosition;
     }
 
     /**
@@ -602,10 +606,10 @@ public class WheelView<T> extends ListView implements IWheelView<T> {
         if (mLoop) {
             position = (position + mWheelSize / 2) % getWheelCount();
         }
-        if (position == mCurrentPositon && !join) {
+        if (position == mCurrentPosition && !join) {
             return;
         }
-        mCurrentPositon = position;
+        mCurrentPosition = position;
         mWheelAdapter.setCurrentPosition(position);
         mHandler.removeMessages(WheelConstants.WHEEL_SCROLL_HANDLER_WHAT);
         mHandler.sendEmptyMessageDelayed(WheelConstants
@@ -620,8 +624,7 @@ public class WheelView<T> extends ListView implements IWheelView<T> {
      * @param curPosition
      * @param offset
      */
-    private void refreshVisibleItems(int firstPosition, int curPosition, int
-            offset) {
+    private void refreshVisibleItems(int firstPosition, int curPosition, int offset) {
         for (int i = curPosition - offset; i <= curPosition + offset; i++) {
             View itemView = getChildAt(i - firstPosition);
             if (itemView == null) {
@@ -633,6 +636,7 @@ public class WheelView<T> extends ListView implements IWheelView<T> {
                         (WheelConstants.WHEEL_ITEM_TEXT_TAG);
                 refreshTextView(i, curPosition, itemView, textView);
             } else {    // 自定义类型
+                // FIXME: 2025/1/6 bug!
                 TextView textView = WheelUtils.findTextView(itemView);
                 if (textView != null) {
                     refreshTextView(i, curPosition, itemView, textView);
@@ -719,6 +723,7 @@ public class WheelView<T> extends ListView implements IWheelView<T> {
         }
     }
 
+    // FIXME: 2025/1/6 delete!
     public enum Skin { // 滚轮皮肤
         Common, Holo, None
     }

@@ -47,7 +47,6 @@ public abstract class BaseWheelAdapter<T> extends BaseAdapter {
 
     /**
      * 设置当前刻度
-     *
      * @param position
      */
     public final void setCurrentPosition(int position) {
@@ -125,7 +124,12 @@ public abstract class BaseWheelAdapter<T> extends BaseAdapter {
         }
         if (mOnClickListener != null) {
             final int finalPosition = position;
-            view.setOnClickListener(v -> mOnClickListener.onPositionClick(finalPosition));
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnClickListener.onPositionClick(finalPosition);
+                }
+            });
         }
         return view;
     }

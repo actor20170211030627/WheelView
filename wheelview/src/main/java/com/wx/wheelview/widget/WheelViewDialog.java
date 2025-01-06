@@ -93,9 +93,12 @@ public class WheelViewDialog<T> implements View.OnClickListener {
         mStyle.selectedTextZoom = 1.2f;
         mWheelView.setStyle(mStyle);
 
-        mWheelView.setOnWheelItemSelectedListener((position, text) -> {
-            mSelectedPos = position;
-            mSelectedText = text;
+        mWheelView.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener<T>() {
+            @Override
+            public void onItemSelected(int position, T text) {
+                mSelectedPos = position;
+                mSelectedText = text;
+            }
         });
         ViewGroup.MarginLayoutParams wheelParams =
                 new ViewGroup.MarginLayoutParams(LinearLayout.LayoutParams
